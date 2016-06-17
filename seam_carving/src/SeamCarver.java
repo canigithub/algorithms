@@ -8,7 +8,9 @@ public class SeamCarver {
 
     private int height;
     private int width;
-    private  Color[][] color;
+    private    int[][] red;
+    private    int[][] grn;
+    private    int[][] blu;
     private double[][] energy;  // default non-transposed
     private boolean transpose;  // indicate if energy is transposed
                                 // energy and color must be coherent
@@ -188,10 +190,21 @@ public class SeamCarver {
         width  = picture.width();
         transpose = false;
 
-        color  = new Color[height][width];
+//        color  = new Color[height][width];
+//        for (int y = 0; y < height; ++y) {
+//            for (int x = 0; x < width; ++x) {
+//                color[y][x] = picture.get(x, y);
+//            }
+//        }
+
+        red = new int[height][width];
+        grn = new int[height][width];
+        blu = new int[height][width];
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
-                color[y][x] = picture.get(x, y);
+                red[y][x] = picture.get(x, y).getRed();
+                grn[y][x] = picture.get(x, y).getGreen();
+                blu[y][x] = picture.get(x, y).getBlue();
             }
         }
 
@@ -211,7 +224,8 @@ public class SeamCarver {
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
-                picture.set(x, y, color[y][x]);
+//                picture.set(x, y, color[y][x]);
+                picture.set(x, y, new Color(red[y][x], grn[y][x], blu[y][x]));
             }
         }
 
@@ -224,14 +238,12 @@ public class SeamCarver {
             return 1000.;
         }
 
-        Color lft = color[y][x-1], rht = color[y][x+1];
-        Color top = color[y-1][x], bot = color[y+1][x];
-
-        int Rx = rht.getRed()   -  lft.getRed()  ,  Ry = bot.getRed()   -  top.getRed()  ,
-            Gx = rht.getGreen() -  lft.getGreen(),  Gy = bot.getGreen() -  top.getGreen(),
-            Bx = rht.getBlue()  -  lft.getBlue() ,  By = bot.getBlue()  -  top.getBlue() ;
+        int Rx = red[y][x+1]-red[y][x-1], Ry = red[y+1][x]-red[y-1][x],
+            Gx = grn[y][x+1]-grn[y][x-1], Gy = grn[y+1][x]-grn[y-1][x],
+            Bx = blu[y][x+1]-blu[y][x-1], By = blu[y+1][x]-blu[y-1][x];
 
         return Math.sqrt((double)Rx*Rx + Gx*Gx + Bx*Bx + Ry*Ry + Gy*Gy + By*By);
+
     }
 
     public     int width() {                          // width of current picture
@@ -282,25 +294,35 @@ public class SeamCarver {
 
     private   void transpose() {
 
-        Color[][]   color_t = new Color[width][height];
         double[][] energy_t = new double[width][height];
-
         for (int i = 0; i < width; ++i) {
             for (int j = 0; j < height; ++j) {
-
-                color_t[i][j] = color[j][i];
                 energy_t[i][j] = energy[j][i];
             }
         }
-
         energy    = energy_t;
-        color     = color_t;
+
+
+        red = transposeIntMat(red);
+        grn = transposeIntMat(grn);
+        blu = transposeIntMat(blu);
 
         transpose = !transpose;
 
         int temp  = height;
         height    = width;
         width     = temp;
+    }
+
+    private int[][] transposeIntMat(int[][] mat) {
+
+        int[][] mat_t = new int[width][height];
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
+                mat_t[i][j] = mat[j][i];
+            }
+        }
+        return mat_t;
     }
 
     private   void checkException(int[] seam) {
@@ -347,19 +369,17 @@ public class SeamCarver {
 
     private    void removeSeam_vertical(int[] seam) {
 
-        Color[][]   color_ = new Color[height][width-1];
         double[][] energy_ = new double[height][width-1];
-
         for (int y = 0; y < height; ++y) {
-
-            System.arraycopy(color[y], 0, color_[y], 0, seam[y]);   // copy left half
             System.arraycopy(energy[y], 0, energy_[y], 0, seam[y]);
-            System.arraycopy(color[y], seam[y]+1, color_[y], seam[y], width-1-seam[y]);
             System.arraycopy(energy[y], seam[y]+1, energy_[y], seam[y], width-1-seam[y]);
         }
-
-        color = color_;
         energy = energy_;
+
+        red = rmSeamFromIntMat(red, seam);
+        grn = rmSeamFromIntMat(grn, seam);
+        blu = rmSeamFromIntMat(blu, seam);
+
         --width;
 
         // update energy on side of the seam
@@ -373,6 +393,18 @@ public class SeamCarver {
                 energy[i][seam[i]+1] = calcEnergy(i, seam[i]+1);
             }
         }
+    }
+
+    private int[][] rmSeamFromIntMat(int[][] mat, int[] seam) {
+
+        int[][] mat_ = new int[height][width-1];
+
+        for (int y = 0; y < height; ++y) {
+            System.arraycopy(mat[y], 0, mat_[y], 0, seam[y]);   // copy left half
+            System.arraycopy(mat[y], seam[y]+1, mat_[y], seam[y], width-1-seam[y]);
+
+        }
+        return mat_;
     }
 
 
