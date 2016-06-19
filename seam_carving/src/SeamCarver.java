@@ -190,13 +190,6 @@ public class SeamCarver {
         width  = picture.width();
         transpose = false;
 
-//        color  = new Color[height][width];
-//        for (int y = 0; y < height; ++y) {
-//            for (int x = 0; x < width; ++x) {
-//                color[y][x] = picture.get(x, y);
-//            }
-//        }
-
         red = new int[height][width];
         grn = new int[height][width];
         blu = new int[height][width];
@@ -224,7 +217,6 @@ public class SeamCarver {
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
-//                picture.set(x, y, color[y][x]);
                 picture.set(x, y, new Color(red[y][x], grn[y][x], blu[y][x]));
             }
         }
@@ -239,24 +231,28 @@ public class SeamCarver {
         }
 
         int Rx = red[y][x+1]-red[y][x-1], Ry = red[y+1][x]-red[y-1][x],
-            Gx = grn[y][x+1]-grn[y][x-1], Gy = grn[y+1][x]-grn[y-1][x],
-            Bx = blu[y][x+1]-blu[y][x-1], By = blu[y+1][x]-blu[y-1][x];
+                Gx = grn[y][x+1]-grn[y][x-1], Gy = grn[y+1][x]-grn[y-1][x],
+                Bx = blu[y][x+1]-blu[y][x-1], By = blu[y+1][x]-blu[y-1][x];
 
         return Math.sqrt((double)Rx*Rx + Gx*Gx + Bx*Bx + Ry*Ry + Gy*Gy + By*By);
 
     }
 
     public     int width() {                          // width of current picture
-        return width;
+
+        if (!transpose) return width;
+        else            return height;
     }
 
     public     int height() {                         // height of current picture
-        return height;
+
+        if (!transpose) return height;
+        else            return width;
     }
 
     public  double energy(int x, int y) {             // energy of pixel at column x and row y
 
-        if (x < 0 || x >= width() || y < 0 || y >= height()) {
+        if (x < 0 || x > width()-1 || y < 0 || y > height()-1) {
             throw new IndexOutOfBoundsException("pixel out of bound");
         }
 
@@ -266,14 +262,18 @@ public class SeamCarver {
 
     public   int[] findHorizontalSeam() {             // sequence of indices for horizontal seam
 
-        if (!transpose) {transpose();}
+        if (!transpose) {
+            transpose();
+        }
 
         return findSeam_vertical();
     }
 
     public   int[] findVerticalSeam() {               // sequence of indices for vertical seam
 
-        if (transpose) {transpose();}
+        if (transpose) {
+            transpose();
+        }
 
         return findSeam_vertical();
     }
@@ -335,7 +335,7 @@ public class SeamCarver {
             throw new NullPointerException("seam is null");
         }
 
-        if (seam.length != height()) {
+        if (seam.length != height) {
             throw new IllegalArgumentException("seam length not match");
         }
 
@@ -390,7 +390,7 @@ public class SeamCarver {
             }
 
             if (seam[i] < width-1) {
-                energy[i][seam[i]+1] = calcEnergy(i, seam[i]+1);
+                energy[i][seam[i]] = calcEnergy(i, seam[i]);
             }
         }
     }
@@ -409,15 +409,13 @@ public class SeamCarver {
 
 
     // remember to comment this section
-//    public static void main(String[] args) {
-//
-//        SeamCarver sc = new SeamCarver(new Picture(args[0]));
-//        SPT_DAG spt = new SPT_DAG(sc.energy);
-//
-//        int[] arr = sc.findHorizontalSeam();
-//        for (int i = 0; i < arr.length; ++i) {
-//            StdOut.print(arr[i] + " ");
-//        }
-//    }
+    public static void main(String[] args) {
+
+        SeamCarver sc = new SeamCarver(new Picture(args[0]));
+        int[] seam = sc.findHorizontalSeam();
+        StdOut.println(seam.length);
+        StdOut.println(sc.height);
+//        sc.removeHorizontalSeam(seam);
+    }
 
 }
