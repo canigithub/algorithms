@@ -196,6 +196,12 @@ public class BaseballElimination {
 
         FordFulkerson ff = new FordFulkerson(fn, fn.V()-2, fn.V()-1);
 
+
+//        for (i = 0; i < fn.V(); ++i) {
+//            StdOut.println(i + ":" + !ff.inCut(i));
+//        }
+
+
 //        StdOut.println("game:");
 //        for (FlowEdge e : fn.adj(fn.V()-2)) {
 //            StdOut.println(e);
@@ -206,26 +212,50 @@ public class BaseballElimination {
 //        }
 
 
+        List<String> list = new ArrayList<>();
+//        List<Integer> auxi = new ArrayList<>();
         for (FlowEdge e : fn.adj(fn.V()-2)) {
 
             if (e.flow() < e.capacity()) {
                 checked[id] = true;
                 elimed[id] = true;
-                break;
+                int len = t.length-1;
+                k = e.to(); i = 0; j = 1;
+                while(!(k < len)) {
+                    ++i; ++j;
+                    k -= len;
+                    --len;
+                }
+                j += k;
+
+                if (!list.contains(team_name[t[i]])) {
+                    list.add(team_name[t[i]]);
+//                    auxi.add(t[i]);
+                }
+
+                if (!list.contains(team_name[t[j]])) {
+                    list.add(team_name[t[j]]);
+//                    auxi.add(t[i]);
+                }
+
             }
 
         }
 
+        certification.set(id, list);
+
         if (checked[id]) {
 
-            List<String> list = new LinkedList<>();
-            for (FlowEdge e : fn.adj(fn.V()-1)) {
+//            for (i = 0; i < num_team; ++i) {
+//
+//                if (i != id && !auxi.contains(i)) {
+//                    if (sumArray(sche_mat[i], auxi) + num_win[i] > num_win[id] + num_rmgm[id]) {
+//                        list.add(team_name[i]);
+//                    }
+//                }
+//            }
+//            certification.set(id, list);
 
-                if (Double.compare(e.flow(), e.capacity()) == 0) {
-                    list.add(team_name[t[e.from()-offset]]);
-                }
-            }
-            certification.set(id, list);
             return;
         }
 
@@ -234,28 +264,56 @@ public class BaseballElimination {
         certification.set(id, null);
     }
 
+    private int sumArray(int[] arr, List<Integer> list) {
+
+        int sum = 0;
+        for (int i = 0; i < arr.length; ++i) {
+            if (list.contains(i)) {
+                sum += arr[i];
+            }
+        }
+        return sum;
+    }
+
 
     //remember to comment main
     public static void main(String[] args) {
 
         BaseballElimination division = new BaseballElimination(args[0]);
 
-        for (String team : division.teams()) {
-            if (division.isEliminated(team)) {
-                StdOut.print(team + " is eliminated by the subset R = { ");
-                for (String t : division.certificateOfElimination(team)) {
-                    StdOut.print(t + " ");
-                }
-                StdOut.println("}");
-            }
-            else {
-                StdOut.println(team + " is not eliminated");
-            }
-        }
+//        for (String team : division.teams()) {
+//            if (division.isEliminated(team)) {
+//                StdOut.print(team + " is eliminated by the subset R = { ");
+//                for (String t : division.certificateOfElimination(team)) {
+//                    StdOut.print(t + " ");
+//                }
+//                StdOut.println("}");
+//            }
+//            else {
+//                StdOut.println(team + " is not eliminated");
+//            }
+//        }
+
+
+//        elimed[id] = true;
+//
+//        int len = t.length-1;
+//        k = e.to(); i = 0; j = 1;
+//        while(!(k < len)) {
+//            ++i; ++j;
+//            k -= len;
+//            --len;
+//        }
+//        j += k;
+//
+//        List<String> list = new LinkedList<>();
+//        list.add(team_name[t[i]]);
+//        list.add(team_name[t[j]]);
+//        certification.set(id, list);
 
 
 //        StdOut.println(division.certificateOfElimination("Serbia"));
-
+        StdOut.println(division.certificateOfElimination("Detroit"));
     }
 
 }
