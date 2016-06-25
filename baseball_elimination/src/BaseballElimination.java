@@ -196,6 +196,12 @@ public class BaseballElimination {
 
         FordFulkerson ff = new FordFulkerson(fn, fn.V()-2, fn.V()-1);
 
+        for (i = 0; i < fn.V(); ++i) {
+            StdOut.print(i + ":" + ff.inCut(i) + " ");
+        }
+
+        StdOut.println("value:" + ff.value());
+
         List<String> list = new ArrayList<>();
 
         for (i = offset; i < fn.V()-2; ++i) {
@@ -218,27 +224,27 @@ public class BaseballElimination {
     }
 
     //remember to comment main
-//    public static void main(String[] args) {
-//
-//        BaseballElimination division = new BaseballElimination(args[0]);
-//
-////        for (String team : division.teams()) {
-////            if (division.isEliminated(team)) {
-////                StdOut.print(team + " is eliminated by the subset R = { ");
-////                for (String t : division.certificateOfElimination(team)) {
-////                    StdOut.print(t + " ");
-////                }
-////                StdOut.println("}");
-////            }
-////            else {
-////                StdOut.println(team + " is not eliminated");
-////            }
-////        }
-//
-////        StdOut.println(division.certificateOfElimination("Serbia"));
-////        StdOut.println(division.certificateOfElimination("Detroit"));
-////        StdOut.println(division.certificateOfElimination("Philadelphia"));
+    public static void main(String[] args) {
+
+        BaseballElimination division = new BaseballElimination(args[0]);
+
+//        for (String team : division.teams()) {
+//            if (division.isEliminated(team)) {
+//                StdOut.print(team + " is eliminated by the subset R = { ");
+//                for (String t : division.certificateOfElimination(team)) {
+//                    StdOut.print(t + " ");
+//                }
+//                StdOut.println("}");
+//            }
+//            else {
+//                StdOut.println(team + " is not eliminated");
+//            }
+//        }
+
+//        StdOut.println(division.certificateOfElimination("Serbia"));
+//        StdOut.println(division.certificateOfElimination("Detroit"));
+        StdOut.println(division.certificateOfElimination("Philadelphia"));
 //        StdOut.println(division.certificateOfElimination("Team25"));
-//    }
+    }
 
 }
