@@ -117,7 +117,7 @@ public class WordNet {
         if (!isNoun(nounA) || !isNoun(nounB)) {
             throw new IllegalArgumentException("noun not in wordnet");
         }
-        
+
         return noun_list.get(sap.ancestor(noun_id.get(nounA), noun_id.get(nounB)));
     }
 
