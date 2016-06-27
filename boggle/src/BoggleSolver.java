@@ -1,9 +1,11 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.time.Clock;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
 
 public class BoggleSolver {
 
@@ -57,6 +59,7 @@ public class BoggleSolver {
 
         if (!isword[0]) {return;}
 
+//        if (isword[1]) set.add(path);
         if (isword[1] && path.length() >= 3) set.add(path);
 
         for (int k = 0; k < 8; ++k) {   // 8 directions to go
@@ -135,14 +138,16 @@ public class BoggleSolver {
         BoggleBoard board = new BoggleBoard(args[1]);
 
 //        StdOut.println(board.getLetter(2,1));
-
+        long start = System.currentTimeMillis();
         int score = 0;
         for (String word : solver.getAllValidWords(board))
         {
             StdOut.println(word);
             score += solver.scoreOf(word);
         }
+        long end = System.currentTimeMillis();
         StdOut.println("Score = " + score);
+        StdOut.println("Time = " + (end-start));
 
 //        StdOut.println(solver.scoreOf("TOSSED"));
     }
