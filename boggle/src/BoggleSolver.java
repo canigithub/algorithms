@@ -1,11 +1,20 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.time.Clock;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Timer;
+import java.util.*;
+
+/**
+ *  possible optimizing strategy:
+ *  1. char[] of length 16 instead of String (to avoid string concatenation);
+ *  2. convert a char board[][] into an int board[][];
+ *  3. implement TrieNode containsPrefix(): return the node if true;
+ *  4. implement boolean containsWord(TrieNode , String s);
+ *  5. TrieNode could keep more info! for instance: boolean isFound;
+ *  6. Use a stack to save the <String, Node> on the path;
+ *
+ *  Problem: is there a way to avoid copy visited[][] for each dfs?
+ */
+
 
 public class BoggleSolver {
 
@@ -35,6 +44,7 @@ public class BoggleSolver {
 
         HashSet<String> valid_words = new HashSet<>();
 
+
         for (int r = 0; r < board.rows(); ++r) {
             for (int c = 0; c < board.cols(); ++c) {
 
@@ -45,6 +55,7 @@ public class BoggleSolver {
 
         return valid_words;
     }
+
 
     private void dfs(BoggleBoard board, int r, int c, String path, boolean[][] visited, HashSet<String> set) {
 
@@ -60,7 +71,7 @@ public class BoggleSolver {
         if (!isword[0]) {return;}
 
 //        if (isword[1]) set.add(path);
-        if (isword[1] && path.length() >= 3) set.add(path);
+//        if (isword[1] && path.length() >= 3) set.add(path);
 
         for (int k = 0; k < 8; ++k) {   // 8 directions to go
 
@@ -137,18 +148,24 @@ public class BoggleSolver {
         BoggleSolver solver = new BoggleSolver(dictionary);
         BoggleBoard board = new BoggleBoard(args[1]);
 
-//        StdOut.println(board.getLetter(2,1));
-        long start = System.currentTimeMillis();
-        int score = 0;
-        for (String word : solver.getAllValidWords(board))
-        {
-            StdOut.println(word);
-            score += solver.scoreOf(word);
+        while (true) {
+            long start = System.currentTimeMillis();
+            int score = 0;
+            for (String word : solver.getAllValidWords(board)) {
+//            StdOut.println(word);
+                score += solver.scoreOf(word);
+            }
+            long end = System.currentTimeMillis();
+//        StdOut.println("Score = " + score);
+//        StdOut.println("Time = " + (end-start));
         }
-        long end = System.currentTimeMillis();
-        StdOut.println("Score = " + score);
-        StdOut.println("Time = " + (end-start));
 
-//        StdOut.println(solver.scoreOf("TOSSED"));
+//        while (true) {
+////            solver.getAllValidWords(board);
+//            boolean[][] visited = new boolean[4][4];
+//            HashSet<String> set = new HashSet<>();
+//            solver.dfs(board, 0, 0, "", visited, set);
+//        }
+
     }
 }

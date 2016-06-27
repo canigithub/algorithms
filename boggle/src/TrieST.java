@@ -77,9 +77,8 @@ public class TrieST {
 
         int index = index(s.charAt(pos));
 
-        boolean[] b = contains(cur.next[index], s, pos+1);
+        return contains(cur.next[index], s, pos+1);
 
-        return b;
     }
 
     public static void main(String[] args) {
