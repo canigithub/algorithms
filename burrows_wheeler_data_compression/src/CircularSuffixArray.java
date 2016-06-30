@@ -4,9 +4,8 @@ import java.util.Arrays;
 
 public class CircularSuffixArray {
 
-    private static int R = 256;
     private int N;
-    private char[] charray;
+    private String string;
     private int[] index;    // index[i] read as suffix of rank i
 
     public CircularSuffixArray(String s) {      // circular suffix array of s
@@ -20,7 +19,7 @@ public class CircularSuffixArray {
         }
 
         N = s.length();
-        charray = s.toCharArray();
+        string = s;
 
         index = new int[N];
         for (int i = 0; i < index.length; ++i) {
@@ -31,11 +30,15 @@ public class CircularSuffixArray {
 
     }
 
-    private void sortCircularSuffix(int lo, int hi, int d) { // use 3-way quick sort
+    private void sortCircularSuffix(int lo, int hi, int d) { // 3-way quick sort
 
-        if (lo >= hi) {return;}
+        if (lo >= hi) {
+            return;
+        }
 
-        if (d >= N) {return;}
+        if (d >= N) {
+            return;
+        }
 
         char pivot = getChar(index[lo], d);
 
@@ -43,7 +46,7 @@ public class CircularSuffixArray {
 
         while (j <= k) {
 
-            if      (getChar(index[j], d) < pivot)  {
+            if (getChar(index[j], d) < pivot)  {
                 swap(i++, j++);
             }
             else if (getChar(index[j], d) == pivot) {
@@ -55,7 +58,7 @@ public class CircularSuffixArray {
             else if (getChar(index[k], d) == pivot) {
                 swap(j++, k--);
             }
-            else    {
+            else {
                 swap(i++, k);
                 swap(j++, k--);
             }
@@ -63,14 +66,15 @@ public class CircularSuffixArray {
         }
 
         // when out of loop: i->1st elem = pivot, j->1st elem > pivot
-        sortCircularSuffix(lo, i-1, d);  // sort  less part on same index
-        sortCircularSuffix(j, hi, d);    // sort large part on same index
-        sortCircularSuffix(i, j-1, d+1); // sort equal part on next index
+        sortCircularSuffix(lo, i-1, d);  // sort  less part on same level
+        sortCircularSuffix(j, hi, d);    // sort large part on same level
+        sortCircularSuffix(i, j-1, d+1); // sort equal part on next level
+
     }
 
     private char getChar(int i, int d) {    // dth char of ith suffix
-        if (i + d < N) return charray[i+d];
-        return charray[(i+d)%N];
+        if (i + d < N) return string.charAt(i+d);
+        return string.charAt((i+d)%N);
     }
 
     private void swap(int i, int j) {
