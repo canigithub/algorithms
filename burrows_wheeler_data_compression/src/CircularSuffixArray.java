@@ -27,7 +27,7 @@ public class CircularSuffixArray {
             index[i] = i;
         }
 
-//        sortCircularSuffix(0, N-1, 0);
+        sortCircularSuffix(0, N-1, 0);
 
     }
 
@@ -39,54 +39,33 @@ public class CircularSuffixArray {
 
         char pivot = getChar(index[lo], d);
 
-//        StdOut.println("pivot = " + pivot);
-
         int i = lo, j = lo, k = hi;
 
         while (j <= k) {
 
-//            StdOut.print("i=" + i + ":" + getChar(i, d) + " j=" + j + ":" + getChar(j, d) + " k=" + k + ":" + getChar(k, d));
-
             if      (getChar(index[j], d) < pivot)  {
-//                StdOut.print(" " + 1);
                 swap(i++, j++);
             }
             else if (getChar(index[j], d) == pivot) {
-//                StdOut.print(" " + 2);
                 ++j;
             }
             else if (getChar(index[k], d) > pivot)  {
-//                StdOut.print(" " + 3);
                 --k;
             }
             else if (getChar(index[k], d) == pivot) {
-//                StdOut.print(" " + 4);
                 swap(j++, k--);
             }
             else    {
-//                StdOut.print(" " + 5);
-                swap(i++, k); swap(j++, k--);
+                swap(i++, k);
+                swap(j++, k--);
             }
 
-//            StdOut.print("  ");
-//            for (int v = 0; v < N; ++v) {
-//                StdOut.print(getChar(index[v], 0));
-//            }
-//            StdOut.println();
         }
-
-//        StdOut.println("i=" + i + ":" + getChar(index[i], d) + " j=" + j + ":" + getChar(index[j], d) + " k=" + k + ":" + getChar(index[k], d));
 
         // when out of loop: i->1st elem = pivot, j->1st elem > pivot
         sortCircularSuffix(lo, i-1, d);  // sort  less part on same index
         sortCircularSuffix(j, hi, d);    // sort large part on same index
         sortCircularSuffix(i, j-1, d+1); // sort equal part on next index
-
-//        for (int v = 0; v < N; ++v) {
-//            StdOut.print(getChar(index[v], d));
-//        }
-//        StdOut.println();
-
     }
 
     private char getChar(int i, int d) {    // dth char of ith suffix
