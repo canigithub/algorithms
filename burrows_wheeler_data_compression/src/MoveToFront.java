@@ -1,16 +1,12 @@
 
-
 import edu.princeton.cs.algs4.BinaryStdIn;
 import edu.princeton.cs.algs4.BinaryStdOut;
-import edu.princeton.cs.algs4.StdIn;
-import edu.princeton.cs.algs4.StdOut;
-
 
 public class MoveToFront {
 
     private static final int R = 256;
 
-    private static class MoveToFrontPQ {               // origial symbol is 0-based.
+    private static class MoveToFrontPQ {        // origial symbol is 0-based.
 
         private char[] table = new char[R+1];   // 1-based index binary heap (1-based st)
         private  int[] index = new  int[R+1];   // index of symbol. symbol is in range 0~size-1
@@ -42,31 +38,20 @@ public class MoveToFront {
         }
     }
 
-
-
     // do not initiate
     private MoveToFront() {}
 
     // apply move-to-front encoding, reading from standard input and writing to standard output
     public static void encode() {
 
-//        while (!BinaryStdIn.isEmpty()) {
-//            StdOut.print(BinaryStdIn.readChar() + " ");
-//        }
-//        StdOut.println();
-
         MoveToFrontPQ st = new MoveToFrontPQ();
-
-//        StdOut.println("pq len = " + st.index.length);
-//        StdOut.println(st.getIndex('A'));
 
         while (!BinaryStdIn.isEmpty()) {
             char c = BinaryStdIn.readChar();
             int index = st.getIndex(c) & 0xff;
-//            StdOut.print(index + " ");
             BinaryStdOut.write(index, 8);
         }
-//        StdOut.println("[1]" + (char) (st.table[1]-1) + " [2]" + (char) (st.table[2]-1) + " [3]" + (char) (st.table[3]-1));
+
         BinaryStdOut.close();
     }
 
@@ -79,10 +64,10 @@ public class MoveToFront {
             int i = BinaryStdIn.readChar();         // 0-based index
             char c = (char) (st.table[i+1] - 1);
             st.promote(i+1);                        // promote operates on 1-based index
-//            StdOut.print(c);
+
             BinaryStdOut.write(c, 8);
         }
-//        StdOut.println();
+
         BinaryStdOut.close();
     }
 
