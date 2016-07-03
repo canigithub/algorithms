@@ -14,10 +14,6 @@ public class CircularSuffixArray {
             throw new NullPointerException("string is null.");
         }
 
-        if (s.equals("")) {
-            throw new IllegalArgumentException("string is empty.");
-        }
-
         N = s.length();
         string = s;
 
@@ -98,7 +94,7 @@ public class CircularSuffixArray {
 
     public static void main(String[] args) {    // unit testing of the methods (optional)
 
-        CircularSuffixArray cs = new CircularSuffixArray("ABRACADABRA!");
+        CircularSuffixArray cs = new CircularSuffixArray("");
 
         StdOut.println(Arrays.toString(cs.index));
 

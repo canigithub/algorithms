@@ -46,13 +46,13 @@ public class BurrowsWheeler {
 
         int first = BinaryStdIn.readInt();
 
-        StringBuilder sb = new StringBuilder();
+//        StringBuilder sb = new StringBuilder();
+//        while (!BinaryStdIn.isEmpty()) {
+//            sb.append(BinaryStdIn.readChar());
+//        }
+//        char[] tail = sb.toString().toCharArray();
 
-        while (!BinaryStdIn.isEmpty()) {
-            sb.append(BinaryStdIn.readChar());
-        }
-
-        char[] tail = sb.toString().toCharArray();
+        char[] tail = BinaryStdIn.readString().toCharArray();
         char[] head = new char[tail.length];
         int[] next = new int[tail.length];
 
@@ -61,9 +61,18 @@ public class BurrowsWheeler {
         }
         Arrays.sort(head);
 
+//        int first_freq = 0;
+//        for (int i = 0; i < tail.length; ++i) {
+//            if (tail[i] == tail[first]) {++first_freq;}
+//        }
+
         HashMap<Character, LinkedList<Integer>> map = new HashMap<>();
 
         for (int i = 0; i < tail.length; ++i) {
+
+//            if (first_freq == 1 && i == first) {                     // the 'first' should be the last one to be added
+//                continue;                         // since the last 'head' points to first.
+//            }
 
             if (!map.containsKey(tail[i])) {
                 map.put(tail[i], new LinkedList<>());
@@ -71,17 +80,42 @@ public class BurrowsWheeler {
             map.get(tail[i]).add(i);
         }
 
+//        if (first_freq == 1) {
+//            if (!map.containsKey(tail[first])) {
+//                map.put(tail[first], new LinkedList<>());
+//            }
+//            map.get(tail[first]).add(first);
+//        }
+
         for (int i = 0; i < next.length; ++i) {
             next[i] = map.get(head[i]).removeFirst();
         }
 
+//        StdOut.println("[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
+//        StdOut.println(Arrays.toString(tail));
+//        StdOut.println(Arrays.toString(head));
+//        StdOut.println(Arrays.toString(next));
+//        StdOut.println("First = " + first);
+
         int cur = first;
 
+        StringBuilder sb = new StringBuilder();
+
         while(next[cur] != first) {
+            sb.append(head[cur]);
             BinaryStdOut.write(head[cur], 8);
             cur = next[cur];
         }
+        sb.append(head[cur]);
         BinaryStdOut.write(head[cur], 8);
+
+        if (sb.length() < head.length) {
+            int N = head.length/sb.length();
+            while(--N > 0) {
+                BinaryStdOut.write(sb.toString());
+            }
+        }
+
 
         BinaryStdOut.close();
     }
